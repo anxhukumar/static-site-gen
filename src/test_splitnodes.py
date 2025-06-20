@@ -1,5 +1,5 @@
 import unittest
-from split_nodes import split_nodes_delimiter
+from split_nodes import split_nodes_delimiter, split_nodes_image, split_nodes_link
 from textnode import TextNode, TextType
 
 class TestSplitNodes(unittest.TestCase):
@@ -73,6 +73,100 @@ class TestSplitNodes(unittest.TestCase):
         TextNode(" here", TextType.TEXT)
         ]
         self.assertEqual(output, expected_output)
+
+    # test a node that contains image [split_nodes_image]
+    def test_split_images(self):
+        node = TextNode(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png). The End.",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with an ", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" and another ", TextType.TEXT),
+                TextNode(
+                    "second image", TextType.IMAGE, "https://i.imgur.com/3elNhQu.png"
+                ),
+                TextNode(". The End.", TextType.TEXT)
+            ],
+            new_nodes,
+        )
+    
+    # test a node that contains only image and no text [split_nodes_image]
+    def test_split_only_image(self):
+        node = TextNode(
+            "![only image](https://i.imgur.com/abcd123.png)",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode("only image", TextType.IMAGE, "https://i.imgur.com/abcd123.png"),
+            ],
+            new_nodes,
+        )
+
+    # test a node that contains only text and no image [split_nodes_image]
+    def test_split_only_text(self):
+        node = TextNode(
+            "This is plain text with no images.",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode("This is plain text with no images.", TextType.TEXT),
+            ],
+            new_nodes,
+        )
+
+        # test a node that contains links [split_nodes_link]
+    def test_split_links(self):
+        node = TextNode(
+            "This is text with a [link](https://example.com) and another [second link](https://example.org). The End.",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_link([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://example.com"),
+                TextNode(" and another ", TextType.TEXT),
+                TextNode("second link", TextType.LINK, "https://example.org"),
+                TextNode(". The End.", TextType.TEXT),
+            ],
+            new_nodes,
+        )
+
+    # test a node that contains only link and no text [split_nodes_link]
+    def test_split_only_link(self):
+        node = TextNode(
+            "[only link](https://example.com)",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_link([node])
+        self.assertListEqual(
+            [
+                TextNode("only link", TextType.LINK, "https://example.com"),
+            ],
+            new_nodes,
+        )
+
+    # test a node that contains only text and no link [split_nodes_link]
+    def test_split_only_text_link(self):
+        node = TextNode(
+            "This is plain text with no links.",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_link([node])
+        self.assertListEqual(
+            [
+                TextNode("This is plain text with no links.", TextType.TEXT),
+            ],
+            new_nodes,
+        )
 
 
 if __name__ == "__main__":
