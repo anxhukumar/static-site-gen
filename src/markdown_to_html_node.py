@@ -74,4 +74,4 @@ def markdown_to_html_node(markdown):
                     li_nodes.append(ParentNode("li", leafnodes))
                 eldest_child_node.append(ParentNode("ol", li_nodes))
                 
-    return ParentNode("div", eldest_child_node).to_html()
+    return ParentNode("div", eldest_child_node)
