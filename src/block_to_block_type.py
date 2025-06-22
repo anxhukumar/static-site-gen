@@ -11,14 +11,15 @@ class BlockType(Enum):
 def block_to_block_type(block):
     # Check for heading: look for # symbols at the start of the first word
     if "#" in block.split(" ", 1)[0] and len(block.split(" ", 1))>1:
-        count = 0
-        # Count the number of consecutive # symbols
-        for c in block.split(" ", 1)[0]:
-            if c=="#":
-                count += 1
-        # Valid markdown headings have 1-6 # symbols
-        if 1 <= count <= 6: 
-            return BlockType.HEADING
+        if len(block.strip().split("\n")) == 1:
+            count = 0
+            # Count the number of consecutive # symbols
+            for c in block.split(" ", 1)[0]:
+                if c=="#":
+                    count += 1
+            # Valid markdown headings have 1-6 # symbols
+            if 1 <= count <= 6: 
+                return BlockType.HEADING
     
     # Check for code block: must start and end with triple backticks
     if block.startswith("```") and block.endswith("```"):
