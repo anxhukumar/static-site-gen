@@ -49,9 +49,9 @@ Another paragraph
                 ],
             )
 
-        # test with a markdown that has trailing whitespaces after lines
+        # test with a markdown that has leading and trailing whitespaces
         def test_trailing_whitespaces(self):
-            md = "This has trailing spaces   \n\n  Another one with spaces   \n"
+            md = "  This has trailing spaces   \n\n  Another one with spaces   \n"
             blocks = markdown_to_blocks(md)
             self.assertEqual(
                 blocks,
