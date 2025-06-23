@@ -50,7 +50,7 @@ def markdown_to_html_node(markdown):
                 # Extract the code block content from between triple backticks
                 code = b.split("```")[1].lstrip()
                 # Wrap the code inside <code> and then inside <pre>, add to list
-                eldest_child_node.append(ParentNode("pre", [ParentNode("code", [LeafNode(code)])]))
+                eldest_child_node.append(ParentNode("pre", [ParentNode("code", [LeafNode(code, None)])]))
             
             case BlockType.QUOTE:
                 # Split block into individual quote lines
@@ -58,6 +58,10 @@ def markdown_to_html_node(markdown):
                 for l in lines:
                     # Remove the leading '>' and whitespace from each quote line
                     text = l.split(">")[1].strip()
+
+                    if not text:
+                        continue
+
                     # Convert quote text into text nodes
                     text_nodes = text_to_textnodes(text)
                     leafnodes = []
@@ -74,6 +78,10 @@ def markdown_to_html_node(markdown):
                 for l in lines:
                     # Remove the leading '-' and whitespace from each list item
                     text = l.split("-")[1].strip()
+                    
+                    if not text:
+                        continue
+
                     # Convert list item text into text nodes
                     text_nodes = text_to_textnodes(text)
                     leafnodes = []
@@ -83,7 +91,8 @@ def markdown_to_html_node(markdown):
                     # Wrap in <li> and add to list
                     li_nodes.append(ParentNode("li", leafnodes))
                 # Wrap all list items in a <ul> tag and add to main node list
-                eldest_child_node.append(ParentNode("ul", li_nodes))
+                if li_nodes:
+                    eldest_child_node.append(ParentNode("ul", li_nodes))
             
             case BlockType.ORDERED_LIST:
                 # Split ordered list into lines
@@ -92,6 +101,10 @@ def markdown_to_html_node(markdown):
                 for l in lines:
                     # Remove the leading number and dot from each list item
                     text = l.split('.', 1)[1].strip()
+
+                    if not text:
+                        continue
+
                     # Convert list item text into text nodes
                     text_nodes = text_to_textnodes(text)
                     leafnodes = []
@@ -101,7 +114,8 @@ def markdown_to_html_node(markdown):
                     # Wrap in <li> and add to list
                     li_nodes.append(ParentNode("li", leafnodes))
                 # Wrap all list items in an <ol> tag and add to main node list
-                eldest_child_node.append(ParentNode("ol", li_nodes))
+                if li_nodes:
+                    eldest_child_node.append(ParentNode("ol", li_nodes))
                 
     # Return the top-level div node containing all child elements
     return ParentNode("div", eldest_child_node)
