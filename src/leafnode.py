@@ -10,6 +10,8 @@ class LeafNode(HTMLNode):
         if self.tag:
             if self.props:
                 props = self.props_to_html()
+                if self.tag == "img":
+                    return f'<{self.tag} {props}/>'
                 return f'<{self.tag} {props}>{self.value}</{self.tag}>'
             else:
                 return f'<{self.tag}>{self.value}</{self.tag}>'

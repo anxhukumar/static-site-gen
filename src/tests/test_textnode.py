@@ -59,7 +59,7 @@ class TestTextNode(unittest.TestCase):
     def test_image(self):
         node = TextNode("This is alt text", TextType.IMAGE, "https://example.com/image.jpg")
         html_node = text_node_to_html_node(node)
-        self.assertEqual(html_node, LeafNode("", "img", {"alt": "This is alt text", "src": "https://example.com/image.jpg"}))
+        self.assertEqual(html_node, LeafNode(" ", "img", {"alt": "This is alt text", "src": "https://example.com/image.jpg"}))
 
     # test invalid type
     def test_invalid(self):
