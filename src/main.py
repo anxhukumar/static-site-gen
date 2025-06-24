@@ -4,8 +4,9 @@ import shutil
 import sys
 import os
 
-base_path = sys.argv[1]
-if not base_path:
+if len(sys.argv) > 1:
+        base_path = sys.argv[1]
+else:
         base_path = "/"
 
 # delete all the contents of public directory
