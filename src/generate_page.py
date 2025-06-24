@@ -18,26 +18,9 @@ def generate_page(from_path, template_path, dest_path):
     # Extract the title from the markdown
     title = extract_title(md)
 
-    # Split the template into lines for easier manipulation
-    template_split = template.split("\n")
-
-    # Iterate through each line of the template
-    for i in range(len(template_split)):
-        # If the line contains a <title> tag, insert the extracted title
-        if "<title>" in template_split[i]:
-            line_splitted = template_split[i].split("{{ Title }}")  # Split at the placeholder
-            line_splitted.insert(1, f"{title}")  # Insert the title at the correct position
-            line = "".join(line_splitted)  # Join the parts back into a single string
-            template_split[i] = line  # Replace the original line with the updated one
-        # If the line contains an <article> tag, insert the converted HTML content
-        if "<article>" in template_split[i]:
-            line_splitted = template_split[i].split("{{ Content }}")  # Split at the placeholder
-            line_splitted.insert(1, f"{content}")  # Insert the content at the correct position
-            line = "".join(line_splitted)  # Join the parts back into a single string
-            template_split[i] = line  # Replace the original line with the updated one
-
-    # Join the modified lines back into a full HTML string
-    html = "\n".join(template_split)
+    # replace title and content of template
+    html = template.replace("{{ Title }}", title)
+    html = html.replace("{{ Content }}", content)
     
     # Write the final HTML to the destination file
     with open(dest_path, "w") as f:
